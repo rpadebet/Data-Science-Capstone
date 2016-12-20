@@ -2,7 +2,7 @@ predict_next<-function(word,s_tdf=tdf){
     
     count<-wordcount(word)
     
-    while(count>4){
+    while(count>3){
         word<-word_backoff(word)
         count<-wordcount(word)
     }
