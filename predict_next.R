@@ -1,11 +1,8 @@
 predict_next<-function(word,s_tdf=tdf){
     
     count<-wordcount(word)
-    
-    while(count>3){
-        word<-word_backoff(word)
-        count<-wordcount(word)
-    }
+    word<-ifelse(count>3,word_backoff(word),word)
+   
     
     word_p<-paste0(gsub(" ","_",x = word),"_")
     df<-s_tdf[ngram==count+1,]
