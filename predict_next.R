@@ -6,8 +6,8 @@ predict_next<-function(word,dict=tdf){
    
     
     word_p<-paste0(gsub(" ","_",x = word),"_")
-    df<-dict[ngram==count+1,]
-    idx<-grep(pattern = word_p,df$term,fixed = TRUE)
+    df<-dict[ngram==count+1,.(term,term_freq)]
+    idx<-grepl(pattern = word_p,df$term,fixed = TRUE)
     
     poss_list<-df[idx,]
     
