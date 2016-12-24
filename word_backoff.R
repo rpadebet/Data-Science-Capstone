@@ -1,3 +1,6 @@
+#' Given a phrase, this function applies a stupid backoff model and 
+#' returns a phrase with the first word removed
+
 word_backoff<-function(word){
     word_split<-stri_split_fixed(word," ")
     length<-wordcount(word," ")

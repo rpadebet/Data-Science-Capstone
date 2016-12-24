@@ -1,6 +1,6 @@
-#' Given a starting word and the number of words in a sentence (default 7),
-#' the function babbles a sentence, each time predicting the next word from,
-#' the words previously predicted
+#' Given a starting word ,number of words in a sentence (default 7),
+#' and relevant dictionary, this function babbles a sentence, 
+#' each time predicting the next word from the words previously predicted
 
 babble_sentence<-function(startWord,num_words=7,dict=tdf){
     

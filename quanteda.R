@@ -4,7 +4,9 @@ library(data.table)
 library(ngram)
 
 cname<-"./Data/final/en_US/"
-txtfile<-paste0(cname,"en_US.blogs.txt")
+blogsfile<-paste0(cname,"en_US.blogs.txt")
+newsfile<-paste0(cname,"en_US.news.txt")
+twitfile<-paste0(cname,"en_US.twitter.txt")
 
 text<-as.character(fread(input = txtfile,nrows = 10000,sep = "\n"))
 #mytf4 <- textfile(txtfile, cache = FALSE)
