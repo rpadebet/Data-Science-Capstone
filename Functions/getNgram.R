@@ -15,3 +15,10 @@ getNgram<- function(text,n){
 
     return(ngram_data_table)
 }
+
+
+prune_dict<-function(dict){
+    dict<-rbind(dict[ngram==4,][term_freq>2],
+                dict[ngram==3,][term_freq>1],
+                dict[ngram<=2,])
+}

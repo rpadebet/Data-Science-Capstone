@@ -17,19 +17,30 @@ blogsfile_sample<-paste0(dname,"en_US.blogs.txt")
 newsfile_sample<-paste0(dname,"en_US.news.txt")
 twitfile_sample<-paste0(dname,"en_US.twitter.txt")
 
-text<-as.character(fread(input = blogsfile,nrows = 100000,sep = "\n"))
-write_file(text,blogsfile_sample)
-text<-as.character(fread(input = newsfile,nrows = 100000,sep = "\n"))
-write_file(text,newsfile_sample)
-text<-as.character(fread(input = twitfile,nrows = 400000,sep = "\n"))
-write_file(text,twitfile_sample)
+## Create sample of Blogs file
+lines<-read_lines(blogsfile,progress = T)
+lines<-paste(lines,collapse = " ")
+write_file(lines,blogsfile_sample)
+rm(lines)
+
+## Create sample of News file
+lines<-read_lines(newsfile,progress = T)
+lines<-paste(lines,collapse = " ")
+write_file(lines,newsfile_sample)
+rm(lines)
+
+## Create sample of Twitter file
+lines<-read_lines(twitfile,progress = T)
+lines<-paste(lines,collapse = " ")
+write_file(lines,twitfile_sample)
+rm(lines)
 
 ## Sourcing the functions necessary for analysis
-source('~/R Projects/DataScience/Data Science Capstone/CreateDictionary.R')
-source('~/R Projects/DataScience/Data Science Capstone/getNgram.R')
-source('~/R Projects/DataScience/Data Science Capstone/predict_next.R')
-source('~/R Projects/DataScience/Data Science Capstone/word_backoff.R')
-source('~/R Projects/DataScience/Data Science Capstone/babble_sentence.R')
+source('./Functions/CreateDictionary.R')
+source('./Functions/getNgram.R')
+source('./Functions/predict_next.R')
+source('./Functions/word_backoff.R')
+source('./Functions/babble_sentence.R')
 
 
 ## Creating Dictionaries
@@ -57,17 +68,17 @@ rm(dictionary)
 
 
 ## Reading Appropriate Dictionary into memory
-blog=read_rds(paste0("./Data/Dictionaries/","US_Blogs_Dict_s",".RDS"))
-news=read_rds(paste0("./Data/Dictionaries/","US_News_Dict_s",".RDS"))
-twit=read_rds(paste0("./Data/Dictionaries/","US_Twit_Dict_s",".RDS"))
+blog="US_Blogs_Dict_s"
+news="US_News_Dict_s"
+twit="US_Twit_Dict_s"
 
-
-
-dict<-twit
+## Pruning Dictionary
+b<-prune_dict(read_rds(paste0("./Data/Dictionaries/",blog,".RDS")))
+n<-prune_dict(read_rds(paste0("./Data/Dictionaries/",news,".RDS")))
+t<-prune_dict(read_rds(paste0("./Data/Dictionaries/",twit,".RDS")))
 
 ## Testing via System.Time()
 word="Type"
-predict_next(word,dict)
 predict_next(word,dict)
 system.time(predict_next(word,dict))
 system.time(babble_sentence(word,8,dict))
@@ -86,5 +97,8 @@ babble_sentence(word,20,dict)
 Rprof()
 summaryRprof(tmp)
 unlink(tmp)
+
+
+
 
 

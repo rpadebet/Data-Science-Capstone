@@ -8,3 +8,9 @@ word_backoff<-function(word){
     word_backoff<-stri_join_list(as.list(word_rem),collapse = " ")
     return(word_backoff)
 }
+
+char_backoff<-function(word){
+    len<-stri_length(word)
+    char_backoff<-stri_sub(stri_trans_tolower(word),from = 1,length = len-1)
+    return(char_backoff)
+}
