@@ -1,5 +1,8 @@
-## Given a text file( as single character ) and the number of n-grams
+## Given a text file( as single character file ) and the number of n-grams
 ## this function generates a data.table with all n-grams<n with frequencies
+
+library(ngram)
+library(data.table)
 
 getNgram<- function(text,n){
     ngram_data_table = data.table(NULL)
@@ -16,9 +19,3 @@ getNgram<- function(text,n){
     return(ngram_data_table)
 }
 
-
-prune_dict<-function(dict){
-    dict<-rbind(dict[ngram==4,][term_freq>2],
-                dict[ngram==3,][term_freq>1],
-                dict[ngram<=2,])
-}

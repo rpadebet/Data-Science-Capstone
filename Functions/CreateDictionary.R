@@ -1,3 +1,19 @@
+##' This function is used to generate the dictionary of ngrams from a given
+##' text file. 
+##' 
+##' 
+##' "DictName": argument specifes the name of the dictionary to save as
+##' "textfile": argument specifies the path to the text file
+##' "ngrams":   argument specifies the maximum number of ngrams to generate.
+##' "saveRDS":  argument specifies whether the dictionary needs to be saved to 
+##'             the local files system.
+##' "prune" :   argument specifies if the dictionary needs to be pruned before saving           
+
+library(readr)
+library(ngram)
+library(data.table)
+
+source('./Functions/getNgram.R')
 
 CreateDictionary = function(DictName,textfile,ngrams=4,saveRDS=TRUE,prune=TRUE){
     t<-Sys.time()
@@ -30,4 +46,10 @@ CreateDictionary = function(DictName,textfile,ngrams=4,saveRDS=TRUE,prune=TRUE){
     return(Dict)
     
     
+}
+
+
+prune_dict<-function(dict){
+    dict<-rbind(dict[ngram >2,][term_freq>1],
+                dict[ngram<=2,])
 }
