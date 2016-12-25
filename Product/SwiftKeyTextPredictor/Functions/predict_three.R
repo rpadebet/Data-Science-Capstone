@@ -5,9 +5,11 @@ library(stringi)
 library(data.table)
 
 source('./Functions/word_backoff.R')
+combo_small<-paste0("./Dictionaries/","US_Combo_Dict_small",".RDS")
+inputdict<-read_rds(combo_small)
 
 
-predict_three<-function(word,dict,ngram_sep=" "){
+predict_three<-function(word,dict=inputdict,ngram_sep=" "){
     
     #' Convert input to lower case
     word<-stri_trans_tolower(word)

@@ -16,6 +16,7 @@ source('./Functions/predict_three.R')
 source('./Functions/word_backoff.R')
 
 
+
 # Define UI for application (just a text box and a table on top for word predicitons).
 ui <- fluidPage(
    
@@ -42,12 +43,10 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-            combo_small<-paste0("./Dictionaries/","US_Combo_Dict_small",".RDS")
-            inputdict<-read_rds(combo_small)
             
             output$predictions <-renderTable({
                                 inputword<-input$phrase
-                                predict_table<-predict_three(word = inputword,dict = inputdict)
+                                predict_table<-predict_three(word = inputword)
                                 t(predict_table)
                                 },bordered = T,striped = T,width = "100%",rownames = T,colnames = F
                                 )
