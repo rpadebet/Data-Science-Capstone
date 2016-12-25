@@ -5,9 +5,8 @@ library(stringi)
 library(data.table)
 
 source('./Functions/word_backoff.R')
-combo_small<-paste0("./Dictionaries/","US_Combo_Dict_small",".RDS")
-inputdict<-read_rds(combo_small)
-
+small<-paste0("./Dictionaries/","US_Dict_small",".RDS")
+inputdict<-read_rds(small)
 
 predict_three<-function(word,dict=inputdict,ngram_sep=" "){
     
@@ -32,14 +31,16 @@ predict_three<-function(word,dict=inputdict,ngram_sep=" "){
         # High Frequency Bigram search
         if(hi_freq){
             df<-dict[ngram==count+1 & term_freq>2,.(term,term_freq)]
-            idx<-grepl(pattern = word_p,df$term,fixed=TRUE)
+            expr<-paste0("^(",word_p,")[a-z]")
+            idx<-grepl(pattern = expr,df$term,perl = TRUE)
             poss_list<-df[idx,]
             hi_freq<-ifelse(nrow(poss_list)==0,F,T)
         }
         # Low Frequency Bigram search
         else{
             df<-dict[ngram==count+1 & term_freq<=2,.(term,term_freq)]
-            idx<-grepl(pattern = word_p,df$term,fixed=TRUE)
+            expr<-paste0("^(",word_p,")[a-z]")
+            idx<-grepl(pattern = expr,df$term,perl = TRUE)
             poss_list<-df[idx,]
         }
         
@@ -50,7 +51,8 @@ predict_three<-function(word,dict=inputdict,ngram_sep=" "){
     
     else{
         df<-dict[ngram==count+1,.(term,term_freq)]
-        idx<-grepl(pattern = word_p,df$term,fixed=TRUE)
+        expr<-paste0("^(",word_p,")[a-z]")
+        idx<-grepl(pattern = expr,df$term,perl = TRUE)
         poss_list<-df[idx,] 
     }
     

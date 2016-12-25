@@ -98,4 +98,8 @@ combo_small<-rbind(combo_1g,combo_2g,combo_3g,combo_4g)
 saveRDS(combo_small,paste0("./Data/Dictionaries/","US_Combo_Dict_small",".RDS"))
 rm(combo_small)
 
-
+## Creating smaller dictionary
+small<-read_rds(paste0("./Data/Dictionaries/","US_Combo_Dict_small",".RDS"))
+small<-small[ngram>1,][term_freq>1,]
+saveRDS(small,paste0("./Data/Dictionaries/","US_Dict_small",".RDS"))
+rm(small)
