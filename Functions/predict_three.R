@@ -15,7 +15,12 @@ predict_three<-function(word,dict=inputdict,ngram_sep=" "){
     #' Get the wordcount to determine the n-gram search space
     count<-stri_count_words(word)
     #' Limit the phrase to quadgram search at best
-    word<-ifelse(count>3,word_backoff(word),word)
+    
+    while(count>3){
+        word<-word_backoff(word)
+        count<-stri_count_words(word)
+    }
+    
     
     #' Process the phrase to add trailing space to aid FIXED search
     word_p<-paste0(gsub(" ",ngram_sep,x = word),ngram_sep)
