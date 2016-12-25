@@ -67,6 +67,7 @@ predict_three<-function(word,dict,ngram_sep=" "){
             prob[i]<-paste0(round(poss_list[i,3]*100,2),"%")
         }
         next_word<-cbind(pred_term,prob) 
+        
     }
    
     
@@ -114,6 +115,7 @@ predict_three<-function(word,dict,ngram_sep=" "){
         word_p<-word_b
     }
     
-    
+    next_word<-as.data.frame(next_word)
+    names(next_word)<-c("Words","Probability")
     return(next_word)
 }
