@@ -42,7 +42,7 @@ predict_three<-function(word,dict=inputdict,ngram_sep=" "){
             hi_freq<-ifelse(nrow(poss_list)==0,F,T)
         }
         # Low Frequency Bigram search
-        else{
+        if(hi_freq==F){
             df<-dict[ngram==count+1 & term_freq<=2,.(term,term_freq)]
             expr<-paste0("^(",word_p,")[a-z]")
             idx<-grepl(pattern = expr,df$term,perl = TRUE)

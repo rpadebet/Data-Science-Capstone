@@ -5,16 +5,21 @@ library(stringi)
 library(data.table)
 
 source('./Functions/word_backoff.R')
+small<-paste0("./Dictionaries/","US_Dict_small",".RDS")
+inputdict<-read_rds(small)
 
 
-predict_next<-function(word,dict,ngram_sep=" "){
+predict_next<-function(word,dict=inputdict,ngram_sep=" "){
     
     #' Convert input to lower case
     word<-stri_trans_tolower(word)
     #' Get the wordcount to determine the n-gram search space
     count<-stri_count_words(word)
     #' Limit the phrase to quadgram search at best
-    word<-ifelse(count>3,word_backoff(word),word)
+    while(count>3){
+        word<-word_backoff(word)
+        count<-stri_count_words(word)
+    }
     
     #' Process the phrase to add trailing space to aid FIXED search
     word_p<-paste0(gsub(" ",ngram_sep,x = word),ngram_sep)
@@ -30,14 +35,16 @@ predict_next<-function(word,dict,ngram_sep=" "){
         # High Frequency Bigram search
         if(hi_freq){
             df<-dict[ngram==count+1 & term_freq>2,.(term,term_freq)]
-            idx<-grepl(pattern = word_p,df$term,fixed=TRUE)
+            expr<-paste0("^(",word_p,")[a-z]")
+            idx<-grepl(pattern = expr,df$term,perl = TRUE)
             poss_list<-df[idx,]
             hi_freq<-ifelse(nrow(poss_list)==0,F,T)
         }
         # Low Frequency Bigram search
-        else{
+        if(hi_freq==F) {
             df<-dict[ngram==count+1 & term_freq<=2,.(term,term_freq)]
-            idx<-grepl(pattern = word_p,df$term,fixed=TRUE)
+            expr<-paste0("^(",word_p,")[a-z]")
+            idx<-grepl(pattern = expr,df$term,perl = TRUE)
             poss_list<-df[idx,]
         }
           
@@ -48,13 +55,18 @@ predict_next<-function(word,dict,ngram_sep=" "){
 
     else{
         df<-dict[ngram==count+1,.(term,term_freq)]
-        idx<-grepl(pattern = word_p,df$term,fixed=TRUE)
+        expr<-paste0("^(",word_p,")[a-z]")
+        idx<-grepl(pattern = expr,df$term,perl = TRUE)
         poss_list<-df[idx,] 
     }
 
     
     best_pred<-as.character(poss_list[1,1])
-    next_word<-stri_split_fixed(best_pred,ngram_sep)[[1]][[stri_count_words(best_pred)]]
+    
+    if(is.na(best_pred)==F){
+        next_word<-stri_split_fixed(best_pred,ngram_sep)[[1]][[stri_count_words(best_pred)]]
+    }
+    
     
     #' STUPID BACKOFF ALGO: Check if we can predict with given phrase, if not, 
     #' use the "Stupid Backoff" algo to call the predict function 
@@ -83,10 +95,13 @@ predict_next<-function(word,dict,ngram_sep=" "){
         idx<-grepl(pattern = expr,df$term,perl = TRUE)
         poss_list<-df[idx,]
         best_pred<-as.character(poss_list[order(-term_freq)][1,1])
-        next_word<-stri_split_fixed(best_pred,ngram_sep)[[1]][[stri_count_words(best_pred)]]
+        if(is.na(best_pred)==F){
+            next_word<-stri_split_fixed(best_pred,ngram_sep)[[1]][[stri_count_words(best_pred)]]
+        }
+        word_p<-word_b
         
     }
-
+    
     
     return(next_word)
 }
