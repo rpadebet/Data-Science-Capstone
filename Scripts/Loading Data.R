@@ -17,6 +17,20 @@ twitfile<-paste0(cname,"en_US.twitter.txt")
 
 Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 
+
+## File sizes
+blogsize<-file.size(blogsfile)
+newsize<-file.size(newsfile)
+twitsize<-file.size(twitfile)
+
+Desc<-data.frame(
+    file_name = c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt"),
+    file_size = c(file.size(blogsfile)/1024^2,file.size(newsfile)/1024^2,file.size(twitfile)/1024^2),
+    file_chars = c(length(blogsfile),length(newsfile),length(twitfile)),
+    wordcount = c(stri_count_words(blogsfile),stri_count_words(newsfile),stri_count_words(twitfile))
+    
+)
+
 ## Create sample files
 dname<-"./Data/final/en_US/sample/"
 blogsfile_sample<-paste0(dname,"en_US.blogs.txt")

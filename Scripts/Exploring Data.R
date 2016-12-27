@@ -8,7 +8,6 @@ library(ggplot2)
 
 ## Downloading File
 url<-"https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"
-
 download.file(url,"./Data/SwiftKey.zip",method = "curl")
 unzip("./Data/SwiftKey.zip",exdir = "./Data/")
 
@@ -33,6 +32,7 @@ Desc<-data.frame(
     file_chars = c(length(blogs_file),length(news_file),length(twit_file)),
     wordcount = c(wordcount(blogs_file," "),wordcount(news_file," "),wordcount(twit_file," "))
 )
+saveRDS(Desc,"Desc.RDS")
 
 kable(Desc)
 
@@ -101,6 +101,7 @@ t<-read_rds(paste0("./Dictionaries/",twit,".RDS"))
 combo<-rbind(b,n,t)
 setkey(combo,term)
 combo<-combo[,.(term_freq=sum(term_freq),ngram=mean(ngram)),term][order(-ngram,-term_freq)]
+saveRDS(combo,"ComboDict.RDS")
 
 ## Exploring the data
 combo_top10<-rbind(combo[ngram==1,][1:10],
@@ -125,7 +126,7 @@ g1<-ggplot(combo_top10[ngram==1],aes(x=term,y=term_freq))+
     geom_bar(stat="identity",col="black",width=0.5,fill="salmon")+
     #scale_fill_gradient(low = "yellow", high = "red")+
     coord_flip()+
-    ylab("Frequency of Terms)")+
+    ylab("Frequency of Terms")+
     xlab("Top 10 Terms")+
     ggtitle("Top 10 Term Frequency 1-Gram")
 print(g1)
@@ -147,7 +148,7 @@ g2<-ggplot(combo_top10[ngram==2],aes(x=term,y=term_freq))+
     geom_bar(stat="identity",col="black",width=0.5,fill="yellow")+
     #scale_fill_gradient(low = "yellow", high = "red")+
     coord_flip()+
-    ylab("Frequency of Terms)")+
+    ylab("Frequency of Terms")+
     xlab("Top 10 Terms")+
     ggtitle("Top 10 Term Frequency 2-Gram")
 print(g2)
@@ -165,7 +166,7 @@ g3<-ggplot(combo_top10[ngram==3],aes(x=term,y=term_freq))+
     geom_bar(stat="identity",col="black",width=0.5,fill="cyan")+
     #scale_fill_gradient(low = "yellow", high = "red")+
     coord_flip()+
-    ylab("Frequency of Terms)")+
+    ylab("Frequency of Terms")+
     xlab("Top 10 Terms")+
     ggtitle("Top 10 Term Frequency 3-Gram")
 print(g3)
@@ -184,8 +185,9 @@ g4<-ggplot(combo_top10[ngram==4],aes(x=term,y=term_freq))+
     geom_bar(stat="identity",col="black",width=0.5,fill="magenta")+
     #scale_fill_gradient(low = "yellow", high = "red")+
     coord_flip()+
-    ylab("Frequency of Terms)")+
+    ylab("Frequency of Terms")+
     xlab("Top 10 Terms")+
     ggtitle("Top 10 Term Frequency 4-Gram")
 print(g4)
 
+saverds(h1,)

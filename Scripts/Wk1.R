@@ -22,7 +22,7 @@ install.packages("tm")
 library(tm)
 install.packages("slam")
 
-blog_en<-Corpus(DirSource(directory ="./Data/final/en_US/en_US.blogs.txt" ))
+blog_en<-Corpus(DirSource(directory ="./Data/final/en_US/" ))
 
 #3
 blogs<-file("./Data/final/en_US/en_US.blogs.txt","r")
